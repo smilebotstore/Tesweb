@@ -278,6 +278,65 @@
   }
   .form-panel.active { display: block; }
 
+  /* ID LIST */
+  .id-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .id-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .id-row input {
+    flex: 1;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .id-row-remove {
+    background: rgba(255,74,74,0.1);
+    border: 1px solid rgba(255,74,74,0.3);
+    border-radius: 2px;
+    color: var(--accent2);
+    width: 32px;
+    height: 38px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .id-row-remove:hover { background: rgba(255,74,74,0.25); }
+
+  .add-id-btn {
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 2px;
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 7px 14px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .add-id-btn:hover {
+    border-color: var(--accent);
+    background: var(--glow);
+  }
+
   /* ACCESS CODE */
   .access-section {
     background: rgba(255,215,0,0.04);
@@ -633,12 +692,16 @@
           <input type="text" id="kec-kasus" placeholder="Contoh: Mobil biru masuk sungai">
         </div>
         <div class="field">
-          <label>🚗 Kendaraan Milik (Mention/Nama) <span class="required-mark">*</span></label>
-          <input type="text" id="kec-kendaraan" placeholder="Contoh: @username atau nama pemilik">
+          <label>🚗 Kendaraan Milik <span class="required-mark">*</span></label>
+          <div class="id-list" id="kec-kendaraan-list"></div>
+          <button type="button" class="add-id-btn" onclick="addIdRow('kec-kendaraan-list')">+ Tambah Pemilik</button>
+          <div class="lock-hint" style="margin-top:6px;">// Masukkan User ID Discord (angka) — klik kanan profil → Salin ID</div>
         </div>
         <div class="field">
-          <label>👮 Unit Satlantas yang Ikut (Mention/Nama) <span class="required-mark">*</span></label>
-          <input type="text" id="kec-unit" placeholder="Contoh: @username1, @username2">
+          <label>👮 Unit Satlantas yang Ikut <span class="required-mark">*</span></label>
+          <div class="id-list" id="kec-unit-list"></div>
+          <button type="button" class="add-id-btn" onclick="addIdRow('kec-unit-list')">+ Tambah Anggota</button>
+          <div class="lock-hint" style="margin-top:6px;">// Masukkan User ID Discord (angka) — klik kanan profil → Salin ID</div>
         </div>
         <div class="field">
           <label>⏱️ Kronologi <span class="required-mark">*</span></label>
@@ -662,11 +725,10 @@
         </div>
         <div class="divider"></div>
         <div class="field">
-          <label>✍️ Ditandatangani Oleh (Mention/Nama)</label>
-          <input type="text" id="kec-ttd1" placeholder="Penanda tangan 1 (mention atau nama)">
-        </div>
-        <div class="field">
-          <input type="text" id="kec-ttd2" placeholder="Penanda tangan 2 (opsional)">
+          <label>✍️ Ditandatangani Oleh</label>
+          <div class="id-list" id="kec-ttd-list"></div>
+          <button type="button" class="add-id-btn" onclick="addIdRow('kec-ttd-list')">+ Tambah Penanda Tangan</button>
+          <div class="lock-hint" style="margin-top:6px;">// Masukkan User ID Discord (angka) — klik kanan profil → Salin ID</div>
         </div>
         <div class="field">
           <label>🎖️ Selaku (Jabatan/Role)</label>
@@ -686,7 +748,9 @@
         </div>
         <div class="field">
           <label>👮 Penangkap <span class="required-mark">*</span></label>
-          <input type="text" id="pel-penangkap" placeholder="Contoh: @username1 @username2">
+          <div class="id-list" id="pel-penangkap-list"></div>
+          <button type="button" class="add-id-btn" onclick="addIdRow('pel-penangkap-list')">+ Tambah Penangkap</button>
+          <div class="lock-hint" style="margin-top:6px;">// Masukkan User ID Discord (angka) — klik kanan profil → Salin ID</div>
         </div>
         <div class="field">
           <label>📝 Keterangan Tambahan</label>
@@ -750,6 +814,28 @@
       document.getElementById('btn-pelanggaran').classList.add('active-pelanggaran');
       document.getElementById('panel-pelanggaran').classList.add('active');
     }
+  }
+
+  // ── ID ROW SYSTEM ───────────────────────────────────────────────────────────
+  function addIdRow(listId) {
+    const list = document.getElementById(listId);
+    const row = document.createElement('div');
+    row.className = 'id-row';
+    row.innerHTML = `
+      <input type="text" placeholder="User ID Discord (contoh: 1289860827087900762)" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <button type="button" class="id-row-remove" onclick="this.parentElement.remove()" title="Hapus">✕</button>
+    `;
+    list.appendChild(row);
+    row.querySelector('input').focus();
+  }
+
+  function getMentions(listId) {
+    const list = document.getElementById(listId);
+    if (!list) return '';
+    const ids = Array.from(list.querySelectorAll('input'))
+      .map(i => i.value.trim())
+      .filter(Boolean);
+    return ids.map(id => `<@${id}>`).join(' ');
   }
 
   // ── FILE UPLOAD ─────────────────────────────────────────────────────────────
@@ -817,16 +903,15 @@
     const tanggal = formatDate(document.getElementById('kec-tanggal').value);
     const jam = formatTime(document.getElementById('kec-jam').value);
     const kasus = document.getElementById('kec-kasus').value.trim();
-    const kendaraan = document.getElementById('kec-kendaraan').value.trim();
-    const unit = document.getElementById('kec-unit').value.trim();
+    const kendaraan = getMentions('kec-kendaraan-list');
+    const unit = getMentions('kec-unit-list');
     const kronologi = document.getElementById('kec-kronologi').value.trim();
     const kondisi = document.getElementById('kec-kondisi').value;
     const penanganan = document.getElementById('kec-penanganan').value.trim();
-    const ttd1 = document.getElementById('kec-ttd1').value.trim();
-    const ttd2 = document.getElementById('kec-ttd2').value.trim();
+    const ttdMentions = getMentions('kec-ttd-list');
     const selaku = document.getElementById('kec-selaku').value.trim();
 
-    const ttdLine = [ttd1, ttd2].filter(Boolean).join('\n');
+    const ttdLine = ttdMentions || '-';
     const selakuLine = selaku ? `\nSelaku\n${selaku}` : '';
 
     const content = [
@@ -874,13 +959,13 @@
   function buildPelanggaranEmbed() {
     const nama = document.getElementById('pel-nama').value.trim();
     const pasal = document.getElementById('pel-jenis').value.trim();
-    const penangkap = document.getElementById('pel-penangkap').value.trim();
+    const penangkap = getMentions('pel-penangkap-list');
     const keterangan = document.getElementById('pel-keterangan').value.trim();
 
     const content = [
       `NAMA: ${nama}`,
       `PASAL: ${pasal}`,
-      `PENANGKAP: ${penangkap}`,
+      `PENANGKAP: ${penangkap || '-'}`,
       keterangan ? `KETERANGAN: ${keterangan}` : ''
     ].filter(Boolean).join('\n');
 
@@ -892,7 +977,7 @@
         fields: [
           { name: 'NAMA', value: nama },
           { name: 'PASAL', value: pasal },
-          { name: 'PENANGKAP', value: penangkap },
+          { name: 'PENANGKAP', value: penangkap || '-' },
           ...(keterangan ? [{ name: 'KETERANGAN', value: keterangan }] : []),
         ],
         footer: { text: '"Setia Sigap untuk Nusantara" • SATLANTAS' },
@@ -908,8 +993,8 @@
         document.getElementById('kec-tanggal').value &&
         document.getElementById('kec-jam').value &&
         document.getElementById('kec-kasus').value.trim() &&
-        document.getElementById('kec-kendaraan').value.trim() &&
-        document.getElementById('kec-unit').value.trim() &&
+        (getMentions('kec-kendaraan-list') || true) &&
+        (getMentions('kec-unit-list') || true) &&
         document.getElementById('kec-kronologi').value.trim() &&
         document.getElementById('kec-kondisi').value &&
         document.getElementById('kec-penanganan').value.trim()
@@ -918,7 +1003,7 @@
       return (
         document.getElementById('pel-nama').value.trim() &&
         document.getElementById('pel-jenis').value.trim() &&
-        document.getElementById('pel-penangkap').value.trim()
+        getMentions('pel-penangkap-list')
       );
     }
   }
@@ -997,6 +1082,12 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 3800);
   }
 
+  // Init default ID rows
+  addIdRow('pel-penangkap-list');
+  addIdRow('kec-unit-list');
+  addIdRow('kec-kendaraan-list');
+  addIdRow('kec-ttd-list');
+
   // Set default date/time
   const now = new Date();
   const pad = n => String(n).padStart(2,'0');
@@ -1004,4 +1095,4 @@
   document.getElementById('kec-jam').value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 </script>
 </body>
-</html>
+  </html>
