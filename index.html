@@ -482,11 +482,11 @@
 <script>
   // ══ CONFIG ══════════════════════════════════════════════
   // Kecelakaan & Pelanggaran
-  const WEBHOOK_URL       = "https://discord.com/api/webhooks/1510118486020587762/_qDeCpd2Baebw-ehXzD5oluVRv97TSJaCw4AO7cp835MdZkIHTGIvf-tY9GfNXYogIkO";
+  const WEBHOOK_URL       = "https://discord.com/api/webhooks/1510142701654249563/NiZ13UufBiQtyGLXzUBg6zZS2YNW_jMu6cr28xGBoQkgQ1URajsSpcMzE6tSNOo0aben";
   const VALID_ACCESS_CODE = "NSPD^Q4z!8Tm&L2";
 
   // Propam (kode akses & webhook berbeda)
-  const PROPAM_WEBHOOK_URL  = "https://discord.com/api/webhooks/1510140072098271253/Uo60cwybHWwgPOk88Lq4xWC09VnfF7-TG4rcLG3fPSKLF6raTkZxpbmOFs9wp6T8ZGx6";
+  const PROPAM_WEBHOOK_URL  = "https://discord.com/api/webhooks/1510142902972448829/ympqe-ksGDJSwMEEx1PbWcgcrNF_9po1KH_R8U1pWzCWUStZO_vRcEPA4cskfb4x-m57";
   const PROPAM_ACCESS_CODE  = "Propam#8Xr!29Lm@Qv";
 
   // ══ STATE ═══════════════════════════════════════════════
@@ -645,61 +645,20 @@
     const petugas   = v('pro-petugas');
     const pangkatP  = v('pro-pangkat-petugas');
 
-    const SEP = '━━━━━━━━━━━━━━━━━━━';
-
-    const content = [
-      `# ${SEP}`,
-      `# DIVISI PROPAM • BIRO WABPROF`,
-      `# KEPOLIAN NSPD`,
-      `# ${SEP}`,``,
-      `## LAPORAN HASIL PENINDAKAN`,
-      `> Nomor : ${nomor}`,``,
-      `Pada hari **${tanggalL}**,`,
-      `anggota Propam/Biro Wabprof telah melakukan penindakan`,
-      `terhadap anggota yang diduga melakukan pelanggaran.`,``,
-      `### IDENTITAS TERLAPOR`,
-      `> Nama : ${nama}`,
-      `> Pangkat : ${pangkat}`,
-      `> Divisi/Satuan : ${divisi}`,``,
-      `### DASAR PENINDAKAN`,
-      `> Menindaklanjuti laporan/temuan mengenai dugaan pelanggaran:`,
-      pelanggar,``,
-      `### URAIAN KEJADIAN`,
-      `> ${kronologi}`,``,
-      `### TINDAKAN YANG DILAKUKAN`,
-      tindakan,``,
-      `### BARANG BUKTI`,
-      `- ${bukti}`,``,
-      `### HASIL PENINDAKAN`,
-      `> ${hasil}`,``,
-      SEP,``,
-      `**Nusantara, ${tanggal}**`,``,
-      `Petugas Penindak`,
-      `**${petugas}**`,
-      `*${pangkatP}*`,``,
-      `# ${SEP}`,
-    ].join('\n');
+    const lines = [
+      `🛡️ **LAPORAN PROPAM** | No. ${nomor} | ${tanggal}`,
+      `👤 Terlapor: ${nama} (${pangkat}) — ${divisi}`,
+      `📌 Pelanggaran: ${pelanggar}`,
+      `📝 Kronologi: ${kronologi}`,
+    ];
+    if (tindakan) lines.push(`⚡ Tindakan: ${tindakan}`);
+    lines.push(`📦 Barang Bukti: ${bukti}`);
+    lines.push(`✅ Hasil: ${hasil}`);
+    lines.push(`👮 Petugas: ${petugas} — ${pangkatP}`);
 
     return {
-      content,
-      embeds: [{
-        color: 0xa855f7,
-        title: '🛡️ LAPORAN PENINDAKAN PROPAM',
-        fields: [
-          {name:'📄 Nomor',       value:nomor,    inline:true},
-          {name:'🗓️ Tanggal',    value:tanggal,  inline:true},
-          {name:'👤 Terlapor',    value:`${nama} — ${pangkat}`, inline:true},
-          {name:'🏢 Divisi',      value:divisi,   inline:true},
-          {name:'📌 Pelanggaran', value:pelanggar},
-          {name:'📝 Kronologi',   value:kronologi},
-          ...(tindakan ? [{name:'⚡ Tindakan', value:tindakan}] : []),
-          {name:'📦 Barang Bukti', value:bukti,  inline:true},
-          {name:'✅ Hasil',        value:hasil,   inline:true},
-          {name:'👮 Petugas',      value:`${petugas} — ${pangkatP}`},
-        ],
-        footer:{text:'DIVISI PROPAM • BIRO WABPROF • KEPOLIAN NSPD'},
-        timestamp: new Date().toISOString(),
-      }]
+      content: lines.join('\n'),
+      embeds: [],
     };
   }
 
@@ -746,7 +705,9 @@
       const res = await fetch(targetWebhook, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({content: payload.content, embeds: payload.embeds}),
+        body: JSON.stringify(payload.embeds.length
+          ? {content: payload.content, embeds: payload.embeds}
+          : {content: payload.content}),
       });
       if (!res.ok) {
         const err = await res.json().catch(()=>({}));
