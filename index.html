@@ -373,48 +373,91 @@
   /* SUBMIT BUTTON */
   .submit-btn {
     width: 100%;
-    padding: 16px;
-    background: var(--accent);
+    padding: 0;
+    height: 58px;
+    background: linear-gradient(135deg, #0099dd 0%, #00b4ff 50%, #0099dd 100%);
+    background-size: 200% 100%;
     border: none;
     border-radius: 3px;
-    color: var(--bg);
+    color: #fff;
     font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    letter-spacing: 3px;
+    letter-spacing: 5px;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.2s;
     position: relative;
     overflow: hidden;
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    transition: background-position 0.4s ease, box-shadow 0.3s ease, transform 0.15s ease;
+    box-shadow: 0 4px 24px rgba(0,180,255,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
   }
 
   .submit-btn::before {
     content: '';
     position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .btn-shine {
+    position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
     transform: translateX(-100%);
-    transition: transform 0.4s;
+    transition: transform 0.5s ease;
+  }
+
+  .btn-text {
+    position: relative;
+    z-index: 1;
+    letter-spacing: 6px;
+  }
+
+  .btn-arrow {
+    position: relative;
+    z-index: 1;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0;
+    transition: transform 0.2s ease;
+    opacity: 0.8;
   }
 
   .submit-btn:hover {
-    background: #22c8ff;
-    box-shadow: 0 0 30px rgba(0,180,255,0.4);
-    transform: translateY(-1px);
+    background-position: 100% 0;
+    box-shadow: 0 6px 36px rgba(0,180,255,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(-2px);
   }
 
-  .submit-btn:hover::before { transform: translateX(100%); }
+  .submit-btn:hover .btn-shine { transform: translateX(100%); }
+  .submit-btn:hover .btn-arrow { transform: translateX(5px); }
 
-  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:active { transform: translateY(0); box-shadow: 0 2px 12px rgba(0,180,255,0.3); }
 
   .submit-btn:disabled {
-    background: var(--text-dim);
+    background: var(--surface2);
+    color: var(--text-dim);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    border: 1px solid var(--border);
   }
+
+  .submit-btn:disabled .btn-arrow { display: none; }
 
   /* TOAST */
   .toast {
@@ -634,16 +677,16 @@
       <!-- FORM PELANGGARAN BIASA -->
       <div class="form-panel" id="panel-pelanggaran">
         <div class="field">
-          <label>👤 Nama Pelanggar <span class="required-mark">*</span></label>
-          <input type="text" id="pel-nama" placeholder="Nama lengkap pelanggar">
+          <label>👤 Nama <span class="required-mark">*</span></label>
+          <input type="text" id="pel-nama" placeholder="Nama pelanggar">
         </div>
         <div class="field">
-          <label>⚠️ Jenis Pelanggaran <span class="required-mark">*</span></label>
-          <textarea id="pel-jenis" placeholder="Contoh: Merampok bank, cash register&#10;(pisahkan dengan koma jika lebih dari satu)" style="min-height:90px;"></textarea>
+          <label>⚖️ Pasal <span class="required-mark">*</span></label>
+          <textarea id="pel-jenis" placeholder="Contoh: Percobaan penembakan anggota dan mengganggu anggota kepolisian yang sedang RP" style="min-height:90px;"></textarea>
         </div>
         <div class="field">
-          <label>👮 Penangkap (Mention/Nama) <span class="required-mark">*</span></label>
-          <input type="text" id="pel-penangkap" placeholder="Contoh: @username atau nama petugas">
+          <label>👮 Penangkap <span class="required-mark">*</span></label>
+          <input type="text" id="pel-penangkap" placeholder="Contoh: @username1 @username2">
         </div>
         <div class="field">
           <label>📝 Keterangan Tambahan</label>
@@ -673,7 +716,9 @@
 
   <!-- TOMBOL KIRIM -->
   <button class="submit-btn" onclick="kirimLaporan()" id="submit-btn">
-    🚀 KIRIM LAPORAN KE DISCORD
+    <span class="btn-text">KIRIM LAPORAN</span>
+    <span class="btn-arrow">→</span>
+    <div class="btn-shine"></div>
   </button>
 
 </div>
@@ -691,7 +736,7 @@
 
   // ── KODE AKSES ─────────────────────────────────────────────────────────────
   // Ganti string di bawah ini dengan kode akses yang kamu inginkan
-  const VALID_ACCESS_CODE = "Nusantara Police Dept.";
+  const VALID_ACCESS_CODE = "NSPD^Q4z!8Tm&L2";
 
   // ── JENIS LAPORAN ───────────────────────────────────────────────────────────
   function setType(type) {
@@ -828,27 +873,27 @@
 
   function buildPelanggaranEmbed() {
     const nama = document.getElementById('pel-nama').value.trim();
-    const jenis = document.getElementById('pel-jenis').value.trim();
+    const pasal = document.getElementById('pel-jenis').value.trim();
     const penangkap = document.getElementById('pel-penangkap').value.trim();
     const keterangan = document.getElementById('pel-keterangan').value.trim();
 
     const content = [
-      `**Nama :** ${nama}`,
-      `**Pelanggaran :** ${jenis}`,
-      `**Penangkap :** ${penangkap}`,
-      keterangan ? `**Keterangan :** ${keterangan}` : ''
+      `NAMA: ${nama}`,
+      `PASAL: ${pasal}`,
+      `PENANGKAP: ${penangkap}`,
+      keterangan ? `KETERANGAN: ${keterangan}` : ''
     ].filter(Boolean).join('\n');
 
     return {
       content,
       embeds: [{
         color: 0xffd700,
-        title: '⚠️ LAPORAN PELANGGARAN LALU LINTAS',
+        title: '⚠️ LAPORAN PELANGGARAN',
         fields: [
-          { name: '👤 Nama Pelanggar', value: nama },
-          { name: '⚠️ Pelanggaran', value: jenis },
-          { name: '👮 Penangkap', value: penangkap },
-          ...(keterangan ? [{ name: '📝 Keterangan', value: keterangan }] : []),
+          { name: 'NAMA', value: nama },
+          { name: 'PASAL', value: pasal },
+          { name: 'PENANGKAP', value: penangkap },
+          ...(keterangan ? [{ name: 'KETERANGAN', value: keterangan }] : []),
         ],
         footer: { text: '"Setia Sigap untuk Nusantara" • SATLANTAS' },
         timestamp: new Date().toISOString(),
@@ -899,7 +944,7 @@
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
-    btn.textContent = '⏳ MENGIRIM...';
+    btn.innerHTML = '<span class="btn-text">MENGIRIM...</span><div class="btn-shine"></div>';
 
     try {
       const payload = currentType === 'kecelakaan' ? buildKecelakaanEmbed() : buildPelanggaranEmbed();
@@ -932,7 +977,7 @@
       showToast(`❌ Gagal kirim: ${e.message}`, 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = '🚀 KIRIM LAPORAN KE DISCORD';
+      btn.innerHTML = '<span class="btn-text">KIRIM LAPORAN</span><span class="btn-arrow">→</span><div class="btn-shine"></div>';
     }
   }
 
@@ -959,4 +1004,4 @@
   document.getElementById('kec-jam').value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 </script>
 </body>
-  </html>
+</html>
