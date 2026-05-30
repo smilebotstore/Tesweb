@@ -12,8 +12,18 @@ const env = {};
 fs.readFileSync(envPath, 'utf8')
   .split('\n')
   .forEach(line => {
-    const [key, ...rest] = line.trim().split('=');
-    if (key && rest.length) env[key.trim()] = rest.join('=').trim();
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) return;
+    const idx = trimmed.indexOf('=');
+    if (idx === -1) return;
+    const key = trimmed.substring(0, idx).trim();
+    let val   = trimmed.substring(idx + 1).trim();
+    // Hapus tanda kutip kalau ada
+    if ((val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    env[key] = val;
   });
 
 // Validasi
