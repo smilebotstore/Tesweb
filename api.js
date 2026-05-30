@@ -1,16 +1,12 @@
-const fs = require('fs');
+const fs   = require('fs');
 const path = require('path');
 
+const TEMPLATE = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+
 module.exports = (req, res) => {
-  const webhookUrl  = process.env.WEBHOOK_URL  || '';
-  const accessCode  = process.env.ACCESS_CODE  || '';
-
-  const templatePath = path.join(process.cwd(), 'template.html');
-  let html = fs.readFileSync(templatePath, 'utf8');
-
-  html = html
-    .replace('%%WEBHOOK_URL%%', webhookUrl)
-    .replace('%%ACCESS_CODE%%', accessCode);
+  const html = TEMPLATE
+    .replace('%%WEBHOOK_URL%%', process.env.WEBHOOK_URL || '')
+    .replace('%%ACCESS_CODE%%', process.env.ACCESS_CODE || '');
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.status(200).send(html);
