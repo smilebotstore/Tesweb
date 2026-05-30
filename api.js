@@ -1,7 +1,7 @@
 const fs   = require('fs');
 const path = require('path');
 
-const TEMPLATE = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+const TEMPLATE = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 
 module.exports = (req, res) => {
   const html = TEMPLATE
