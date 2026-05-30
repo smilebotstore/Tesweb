@@ -152,7 +152,7 @@
   /* TYPE SELECTOR — 3 kolom */
   .type-selector {
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:10px; margin-bottom:22px;
   }
   @media(max-width:580px){ .type-selector{grid-template-columns:1fr;} }
@@ -171,7 +171,6 @@
   .type-btn:hover { border-color:rgba(0,180,255,0.3); color:var(--text); }
   .type-btn.active-kecelakaan { border-color:var(--accent2); background:rgba(255,74,74,0.06); color:var(--accent2); box-shadow:0 0 18px rgba(255,74,74,0.1); }
   .type-btn.active-pelanggaran { border-color:var(--accent3); background:rgba(255,215,0,0.06); color:var(--accent3); box-shadow:0 0 18px rgba(255,215,0,0.1); }
-  .type-btn.active-propam { border-color:var(--accent4); background:rgba(168,85,247,0.06); color:var(--accent4); box-shadow:0 0 18px rgba(168,85,247,0.1); }
 
   /* PANELS */
   .form-panel { display:none; animation:fadeIn 0.3s ease; }
@@ -263,7 +262,7 @@
   <div class="header">
     <div class="header-badge">SISTEM PELAPORAN DIGITAL</div>
     <h1>SISTEM <span>PELAPORAN</span></h1>
-    <div class="header-sub">// KEPOLISIAN NUSANTARA • SATLANTAS & PROPAM //</div>
+    <div class="header-sub">KEPOLISIAN NUSANTARA</div>
   </div>
 
   <!-- KODE AKSES -->
@@ -296,9 +295,7 @@
         <button class="type-btn" id="btn-pelanggaran" onclick="setType('pelanggaran')">
           <span class="type-icon">⚠️</span>PELANGGARAN
         </button>
-        <button class="type-btn" id="btn-propam" onclick="setType('propam')">
-          <span class="type-icon">🛡️</span>PROPAM
-        </button>
+
       </div>
 
       <!-- ════════════ FORM KECELAKAAN ════════════ -->
@@ -379,73 +376,7 @@
         </div>
       </div>
 
-      <!-- ════════════ FORM PROPAM ════════════ -->
-      <div class="form-panel" id="panel-propam">
-        <div class="grid-2">
-          <div class="field">
-            <label>📄 Nomor Laporan <span class="required-mark">*</span></label>
-            <input type="text" id="pro-nomor" placeholder="Contoh: LPH/Propam/0523/2026">
-          </div>
-          <div class="field">
-            <label>🗓️ Tanggal <span class="required-mark">*</span></label>
-            <input type="date" id="pro-tanggal">
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">IDENTITAS TERLAPOR</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>👤 Nama Terlapor <span class="required-mark">*</span></label>
-            <input type="text" id="pro-nama" placeholder="Nama anggota terlapor">
-          </div>
-          <div class="field">
-            <label>🎖️ Pangkat <span class="required-mark">*</span></label>
-            <input type="text" id="pro-pangkat" placeholder="Contoh: Jend Pol">
-          </div>
-        </div>
-        <div class="field">
-          <label>🏢 Divisi / Satuan <span class="required-mark">*</span></label>
-          <input type="text" id="pro-divisi" placeholder="Contoh: Propam, Satlantas, Reskrim">
-        </div>
-        <div class="divider"></div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">DASAR PENINDAKAN</div>
-        <div class="field">
-          <label>📌 Dugaan Pelanggaran <span class="required-mark">*</span></label>
-          <textarea id="pro-pelanggaran" placeholder="Contoh:&#10;• Tidak menggunakan mobil sesuai livery yang berlaku&#10;• Ugal-ugalan saat patroli" style="min-height:100px;"></textarea>
-        </div>
-        <div class="divider"></div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">URAIAN KEJADIAN</div>
-        <div class="field">
-          <label>📝 Kronologi / Uraian Kejadian <span class="required-mark">*</span></label>
-          <textarea id="pro-kronologi" placeholder="Uraikan kejadian secara detail..." style="min-height:110px;"></textarea>
-        </div>
-        <div class="divider"></div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">TINDAKAN & HASIL</div>
-        <div class="field">
-          <label>⚡ Tindakan yang Dilakukan</label>
-          <textarea id="pro-tindakan" placeholder="Contoh:&#10;- Pemeriksaan awal terhadap terlapor&#10;- Pengamanan situasi di lokasi&#10;- Pengumpulan bukti/keterangan saksi"></textarea>
-        </div>
-        <div class="field">
-          <label>📦 Barang Bukti</label>
-          <input type="text" id="pro-bukti" placeholder="Contoh: Foto dokumentasi, rekaman CCTV">
-        </div>
-        <div class="field">
-          <label>✅ Hasil Penindakan</label>
-          <textarea id="pro-hasil" placeholder="Tuliskan hasil penindakan..."></textarea>
-        </div>
-        <div class="divider"></div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">PETUGAS PENINDAK</div>
-        <div class="grid-2">
-          <div class="field">
-            <label>👮 Nama Petugas <span class="required-mark">*</span></label>
-            <input type="text" id="pro-petugas" placeholder="Nama petugas Propam">
-          </div>
-          <div class="field">
-            <label>🎖️ Pangkat Petugas <span class="required-mark">*</span></label>
-            <input type="text" id="pro-pangkat-petugas" placeholder="Contoh: IRJENPOL">
-          </div>
-        </div>
-      </div>
+
 
     </div>
   </div>
@@ -481,13 +412,8 @@
 
 <script>
   // ══ CONFIG ══════════════════════════════════════════════
-  // Kecelakaan & Pelanggaran
   const WEBHOOK_URL       = "https://discord.com/api/webhooks/1510142701654249563/NiZ13UufBiQtyGLXzUBg6zZS2YNW_jMu6cr28xGBoQkgQ1URajsSpcMzE6tSNOo0aben";
   const VALID_ACCESS_CODE = "NSPD^Q4z!8Tm&L2";
-
-  // Propam (kode akses & webhook berbeda)
-  const PROPAM_WEBHOOK_URL  = "https://discord.com/api/webhooks/1510142902972448829/ympqe-ksGDJSwMEEx1PbWcgcrNF_9po1KH_R8U1pWzCWUStZO_vRcEPA4cskfb4x-m57";
-  const PROPAM_ACCESS_CODE  = "Propam#8Xr!29Lm@Qv";
 
   // ══ STATE ═══════════════════════════════════════════════
   let currentType = 'kecelakaan';
@@ -630,50 +556,14 @@
     };
   }
 
-  function buildPropam() {
-    const nomor     = v('pro-nomor');
-    const tanggal   = formatDate(v('pro-tanggal'));
-    const tanggalL  = formatDateLong(v('pro-tanggal'));
-    const nama      = v('pro-nama');
-    const pangkat   = v('pro-pangkat');
-    const divisi    = v('pro-divisi');
-    const pelanggar = v('pro-pelanggaran');
-    const kronologi = v('pro-kronologi');
-    const tindakan  = v('pro-tindakan');
-    const bukti     = v('pro-bukti') || '-';
-    const hasil     = v('pro-hasil') || '-';
-    const petugas   = v('pro-petugas');
-    const pangkatP  = v('pro-pangkat-petugas');
-
-    const lines = [
-      `🛡️ **LAPORAN PROPAM** | No. ${nomor} | ${tanggal}`,
-      `👤 Terlapor: ${nama} (${pangkat}) — ${divisi}`,
-      `📌 Pelanggaran: ${pelanggar}`,
-      `📝 Kronologi: ${kronologi}`,
-    ];
-    if (tindakan) lines.push(`⚡ Tindakan: ${tindakan}`);
-    lines.push(`📦 Barang Bukti: ${bukti}`);
-    lines.push(`✅ Hasil: ${hasil}`);
-    lines.push(`👮 Petugas: ${petugas} — ${pangkatP}`);
-
-    return {
-      content: lines.join('\n'),
-      embeds: [],
-    };
-  }
-
   // ══ VALIDASI ═════════════════════════════════════════════
   function validate() {
     if (currentType === 'kecelakaan') {
       return v('kec-tanggal') && v('kec-jam') && v('kec-kasus') &&
              v('kec-kendaraan') && v('kec-unit') && v('kec-kronologi') &&
              v('kec-kondisi') && v('kec-penanganan');
-    } else if (currentType === 'pelanggaran') {
-      return v('pel-nama') && v('pel-pasal') && v('pel-penangkap');
     } else {
-      return v('pro-nomor') && v('pro-tanggal') && v('pro-nama') &&
-             v('pro-pangkat') && v('pro-divisi') && v('pro-pelanggaran') &&
-             v('pro-kronologi') && v('pro-petugas') && v('pro-pangkat-petugas');
+      return v('pel-nama') && v('pel-pasal') && v('pel-penangkap');
     }
   }
 
@@ -681,14 +571,8 @@
   async function kirimLaporan() {
     const accessCode = document.getElementById('access-code').value.trim();
     if (!accessCode) { showToast('Masukkan kode akses terlebih dahulu!', 'warning'); return; }
-
-    // Pilih kode akses & webhook sesuai jenis laporan
-    const isPropam      = currentType === 'propam';
-    const validCode     = isPropam ? PROPAM_ACCESS_CODE  : VALID_ACCESS_CODE;
-    const targetWebhook = isPropam ? PROPAM_WEBHOOK_URL  : WEBHOOK_URL;
-
-    if (accessCode !== validCode) { showToast('Kode akses salah!', 'error'); return; }
-    if (!targetWebhook.startsWith('https://discord.com/api/webhooks/')) {
+    if (accessCode !== VALID_ACCESS_CODE) { showToast('Kode akses salah!', 'error'); return; }
+    if (!WEBHOOK_URL.startsWith('https://discord.com/api/webhooks/')) {
       showToast('Webhook belum dikonfigurasi di file!', 'error'); return;
     }
     if (!validate()) { showToast('Harap lengkapi semua kolom wajib!', 'warning'); return; }
@@ -698,11 +582,9 @@
     btn.innerHTML = '<span class="btn-text">MENGIRIM...</span><div class="btn-shine"></div>';
 
     try {
-      const payload = currentType === 'kecelakaan' ? buildKecelakaan()
-                    : currentType === 'pelanggaran' ? buildPelanggaran()
-                    : buildPropam();
+      const payload = currentType === 'kecelakaan' ? buildKecelakaan() : buildPelanggaran();
 
-      const res = await fetch(targetWebhook, {
+      const res = await fetch(WEBHOOK_URL, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload.embeds.length
@@ -718,7 +600,7 @@
         const fd = new FormData();
         fd.append('file', uploadedFiles[i]);
         fd.append('payload_json', JSON.stringify({content:`📸 Foto Bukti ${i+1}/${uploadedFiles.length}`}));
-        await fetch(targetWebhook, {method:'POST', body:fd});
+        await fetch(WEBHOOK_URL, {method:'POST', body:fd});
       }
 
       showToast('Laporan berhasil dikirim ke Discord!', 'success');
@@ -738,7 +620,6 @@
     const pad = n => String(n).padStart(2,'0');
     document.getElementById('kec-tanggal').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
     document.getElementById('kec-jam').value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    document.getElementById('pro-tanggal').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
   }
 
   // ══ TOAST ════════════════════════════════════════════════
@@ -754,7 +635,6 @@
   const pad = n => String(n).padStart(2,'0');
   document.getElementById('kec-tanggal').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
   document.getElementById('kec-jam').value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  document.getElementById('pro-tanggal').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
 </script>
 </body>
 </html>
